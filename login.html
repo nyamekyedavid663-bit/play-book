@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login 💕 Play Book</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="hearts-bg" id="hearts"></div>
+<div class="card">
+  <div class="logo">💌</div>
+  <h1>Welcome Back</h1>
+  <p class="subtitle">your love story continues...</p>
+  <div class="error" id="error"></div>
+  <form id="loginForm">
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@sweetheart.com" required />
+    </div>
+    <div class="input-group">
+      <label for="password">Password</label>
+      <div class="pass-wrap">
+        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+        <button type="button" class="toggle-pass" onclick="togglePassword('password', this)" aria-label="Show password">👁️</button>
+      </div>
+    </div>
+    <button class="btn" type="submit">Login ❤️</button>
+  </form>
+  <p class="switch">New here? <a href="signup.html">Create an account</a></p>
+</div>
+<script src="app.js"></script>
+<script>
+  createHearts();
+  document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    loginUser(
+      document.getElementById('email').value,
+      document.getElementById('password').value
+    );
+  });
+</script>
+</body>
+</html>

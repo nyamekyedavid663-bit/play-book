@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign Up 💖 Play Book</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="hearts-bg" id="hearts"></div>
+<div class="card">
+  <div class="logo">💘</div>
+  <h1>Start Your Story</h1>
+  <p class="subtitle">create your romantic playbook</p>
+  <div class="error" id="error"></div>
+  <div class="success" id="success"></div>
+  <form id="signupForm">
+    <div class="input-group">
+      <label>Name / Nickname</label>
+      <input type="text" id="name" placeholder="e.g. Sweetie, Romeo 💕" required minlength="2" />
+    </div>
+    <div class="input-group">
+      <label>WhatsApp Number</label>
+      <input type="tel" id="whatsapp" placeholder="e.g. +234 801 234 5678" required pattern="^[+0-9][0-9\s\-()]{6,20}$" title="Enter a valid WhatsApp number" />
+    </div>
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@sweetheart.com" required />
+    </div>
+    <div class="input-group">
+      <label for="password">Password</label>
+      <div class="pass-wrap">
+        <input type="password" id="password" placeholder="min. 6 characters" required minlength="6" autocomplete="new-password" />
+        <button type="button" class="toggle-pass" onclick="togglePassword('password', this)" aria-label="Show password">👁️</button>
+      </div>
+    </div>
+    <div class="input-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <div class="pass-wrap">
+        <input type="password" id="confirmPassword" placeholder="enter password again 💕" required minlength="6" autocomplete="new-password" />
+        <button type="button" class="toggle-pass" onclick="togglePassword('confirmPassword', this)" aria-label="Show password">👁️</button>
+      </div>
+    </div>
+    <button class="btn" type="submit">Sign Up 💍</button>
+  </form>
+  <p class="switch">Already have love? <a href="login.html">Login here</a></p>
+</div>
+<script src="app.js"></script>
+<script>
+  createHearts();
+  const passEl = document.getElementById('password');
+  const confirmEl = document.getElementById('confirmPassword');
+  function liveMatch() {
+    if (!confirmEl.value) { confirmEl.style.borderColor = '#fecfef'; return; }
+    confirmEl.style.borderColor = passEl.value === confirmEl.value ? '#25D366' : '#fc6076';
+  }
+  passEl.addEventListener('input', liveMatch);
+  confirmEl.addEventListener('input', liveMatch);
+  document.getElementById('signupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    signupUser(
+      document.getElementById('name').value,
+      document.getElementById('email').value,
+      document.getElementById('whatsapp').value,
+      document.getElementById('password').value,
+      document.getElementById('confirmPassword').value
+    );
+  });
+</script>
+</body>
+</html>

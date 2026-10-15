@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hey Crushie 💗 Play Book</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; height: 100%;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 30%, #fc6076 70%, #8a0f3c 100%);
+    font-family: 'Segoe UI', Georgia, serif;
+    overflow: hidden;
+  }
+  body { display: flex; align-items: center; justify-content: center; }
+  .card {
+    background: rgba(255,255,255,.95);
+    border-radius: 24px; padding: 40px 36px;
+    width: 340px; max-width: 88vw; text-align: center;
+    box-shadow: 0 20px 60px rgba(138,15,60,.35);
+    position: relative; z-index: 2;
+  }
+  .heart { font-size: 46px; animation: beat 1.1s infinite; margin-bottom: 4px; }
+  @keyframes beat {
+    0%,100% { transform: scale(1); } 25% { transform: scale(1.15); }
+    40% { transform: scale(0.95); } 60% { transform: scale(1.1); }
+  }
+  h1 { color: #c01a4d; margin: 8px 0 14px; font-size: 26px; font-family: Georgia, serif; }
+  p.message { color: #666; font-size: 15px; line-height: 1.5; margin-bottom: 22px; }
+  h2.question { color: #333; font-size: 19px; margin-bottom: 22px; }
+  .buttons { display: flex; justify-content: center; gap: 14px; position: relative; height: 46px; }
+  button { border: none; border-radius: 999px; padding: 12px 26px; font-size: 15px; font-weight: 600; cursor: pointer; transition: transform .15s ease, background .2s ease; }
+  #yesBtn { background: linear-gradient(90deg,#fc6076,#8a0f3c); color: #fff; }
+  #yesBtn:hover { transform: scale(1.06); }
+  #noBtn { background: #f1f1f1; color: #555; }
+  #smallText { margin-top: 18px; color: #999; font-size: 13px; min-height: 18px; }
+  .success-screen { display: none; text-align: center; }
+  .success-screen h1 { font-size: 30px; }
+  .success-screen p { color: #777; font-size: 15px; margin-top: 8px; }
+  .wa-button {
+    display: inline-block; margin-top: 20px; background: #25D366; color: #fff;
+    text-decoration: none; padding: 12px 26px; border-radius: 999px;
+    font-size: 15px; font-weight: 600;
+  }
+  .wa-button:hover { background: #1ebe5b; transform: scale(1.05); }
+  .back-link { display:block; margin-top:16px; font-size:.85rem; color:#c01a4d; text-decoration:none; }
+  input { font-size:16px; }
+  @media (max-width:480px) {
+    .card { width:100%; padding:28px 20px; border-radius:18px; }
+    body { padding:1rem; }
+  }
+  .confetti { position: fixed; top: -10px; width: 8px; height: 14px; border-radius: 2px; z-index: 5; pointer-events: none; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); opacity: .9; } }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div id="questionView">
+    <div class="heart">💗</div>
+    <h1 id="crushTitle">Hey Crush</h1>
+    <p id="fromBadge" style="display:none;color:#8a0f3c;font-size:.9rem;background:#fff0f4;padding:.4rem .8rem;border-radius:999px;margin:0 0 10px;"></p>
+    <div id="nameInputWrap" style="margin-bottom:14px;">
+      <label style="font-size:.85rem;color:#8a0f3c;font-weight:600;">Who's your crush? 💕</label><br/>
+      <input id="crushNameInput" type="text" placeholder="Type crush name... (default: Crush)" style="width:100%;padding:.7rem 1rem;margin-top:.4rem;border:2px solid #fecfef;border-radius:12px;outline:none;font-size:1rem;background:#fff8fa;" />
+    </div>
+    <p class="message">
+      Since this is a website, I guess for me it was love at first site 😅
+      <br><br>
+      I'm so glad I stumbled upon you in this big digital world. Let's make some real-world memories together
+    </p>
+    <h2 class="question">Wanna hang out sometime?</h2>
+    <div class="buttons">
+      <button id="yesBtn">Yes 😊</button>
+      <button id="noBtn">No 🙁</button>
+    </div>
+    <p id="smallText"></p>
+    <a class="back-link" href="home.html">← back to Play Book</a>
+  </div>
+  <div class="success-screen" id="successView">
+    <div class="heart">🎉</div>
+    <h1>Yay!! 💗</h1>
+    <p id="successText">I'll text you the details!</p>
+    <a id="waLink" href="#" target="_blank" rel="noopener" class="wa-button">Send on WhatsApp 💬</a>
+    <a class="back-link" href="home.html">← back to Play Book</a>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const smallText = document.getElementById('smallText');
+  const questionView = document.getElementById('questionView');
+  const successView = document.getElementById('successView');
+  const waLink = document.getElementById('waLink');
+
+  // Support shared link ?to=Crush&from=Sender&wa=12345
+  // If link present, lock to that crush name + show sender
+  const params = new URLSearchParams(window.location.search);
+  const sharedTo = (params.get('to') || '').trim();
+  const sharedFrom = (params.get('from') || '').trim();
+  const sharedWaRaw = (params.get('wa') || '').trim();
+
+  const user = typeof currentUser === 'function' ? currentUser() : null;
+  const crushNameInput = document.getElementById('crushNameInput');
+
+  function cleanNumber(num) {
+    return (num || '').replace(/[^0-9]/g, '');
+  }
+  const sharedWa = cleanNumber(sharedWaRaw);
+  const ownerWa = typeof getOwnerWhatsapp === 'function' ? getOwnerWhatsapp() : "";
+  const WHATSAPP_NUMBER = sharedWa.length >= 7 ? sharedWa : ownerWa;
+
+  function getCrushName() {
+    if (sharedTo) return sharedTo;
+    const v = (crushNameInput.value || '').trim();
+    if (v) return v;
+    const saved = (localStorage.getItem('playbook_crush_name') || '').trim();
+    if (saved) return saved;
+    return "Crush";
+  }
+  function updateCrushTitle() {
+    const name = getCrushName();
+    document.getElementById('crushTitle').textContent = 'Hey ' + name + ' 💗';
+  }
+
+  if (sharedTo) {
+    // shared mode: hide input, show who it's from
+    document.getElementById('nameInputWrap').style.display = 'none';
+    if (sharedFrom) {
+      const badge = document.getElementById('fromBadge');
+      badge.style.display = 'inline-block';
+      badge.textContent = '💌 From ' + sharedFrom + ' with love';
+    }
+    updateCrushTitle();
+  } else {
+    // creator mode: editable
+    if (user && user.name) crushNameInput.value = user.name;
+    const savedCrush = (localStorage.getItem('playbook_crush_name') || '').trim();
+    if (savedCrush && !crushNameInput.value) crushNameInput.value = savedCrush;
+    updateCrushTitle();
+    crushNameInput.addEventListener('input', () => {
+      localStorage.setItem('playbook_crush_name', crushNameInput.value.trim());
+      updateCrushTitle();
+    });
+  }
+
+  function buildMessage() {
+    const crush = getCrushName();
+    const sender = sharedFrom || (user && user.name ? user.name : '');
+    if (sender) return `Hey! I'm ${crush} 😊 ${sender} sent me this Play Book link and I clicked YES! 💗`;
+    return `Hey! ${crush} clicked Yes on your Play Book page 😊`;
+  }
+
+  const taunts = [
+    "Bonus points for trying though 😄",
+    "Nope, try again 😝",
+    "Hii ni mbaya, finya 'Yes' 😂",
+    "You know you want to click Yes...",
+    "The 'No' button is shy, it keeps running",
+    "Ok fine, one more chance 👀"
+  ];
+  let noCount = 0;
+
+  function moveNoButton() {
+    noCount++;
+    const growth = Math.min(1 + noCount * 0.08, 1.8);
+    yesBtn.style.transform = `scale(${growth})`;
+    const btnRect = noBtn.getBoundingClientRect();
+    const maxX = window.innerWidth - btnRect.width - 20;
+    const maxY = window.innerHeight - btnRect.height - 20;
+    const randomX = Math.max(20, Math.floor(Math.random() * maxX));
+    const randomY = Math.max(20, Math.floor(Math.random() * maxY));
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = randomX + 'px';
+    noBtn.style.top = randomY + 'px';
+    smallText.textContent = taunts[Math.min(noCount - 1, taunts.length - 1)];
+  }
+
+  noBtn.addEventListener('mouseenter', moveNoButton);
+  noBtn.addEventListener('click', (e) => { e.preventDefault(); moveNoButton(); });
+  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, {passive:false});
+
+  function launchConfetti() {
+    const colors = ['#ff4f9a', '#ffd6e8', '#ff8fb8', '#ffe066', '#a0e7e5'];
+    for (let i = 0; i < 120; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti';
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = (2.2 + Math.random() * 1.8) + 's';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4200);
+    }
+  }
+
+  yesBtn.addEventListener('click', () => {
+    if (!WHATSAPP_NUMBER) {
+      smallText.textContent = "Owner: please set your WhatsApp in home.html first 💚";
+      return;
+    }
+    const WHATSAPP_MESSAGE = buildMessage();
+    const crush = getCrushName();
+    questionView.style.display = 'none';
+    successView.style.display = 'block';
+    launchConfetti();
+    setTimeout(launchConfetti, 350);
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+    waLink.href = waUrl;
+    document.getElementById('successText').textContent = `Yay ${crush}! Sending your Yes to +${WHATSAPP_NUMBER} 💬`;
+    window.open(waUrl, '_blank');
+  });
+</script>
+</body>
+</html>

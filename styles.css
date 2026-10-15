@@ -1,0 +1,75 @@
+/* Romantic Play Book - Auth Theme */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Segoe UI', Georgia, serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 30%, #fc6076 70%, #8a0f3c 100%);
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; position:relative;
+}
+.hearts-bg { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+.heart-float {
+  position:absolute; bottom:-40px; color: rgba(255,255,255,.7);
+  animation: floatUp linear infinite; font-size:20px;
+}
+@keyframes floatUp {
+  0% { transform: translateY(0) rotate(0deg); opacity:0; }
+  10% { opacity:1; }
+  100% { transform: translateY(-110vh) rotate(30deg); opacity:0; }
+}
+.card {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  width: 400px; max-width: 92vw;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(138,15,60,.35);
+  text-align:center; z-index:2; position:relative;
+  border: 1px solid rgba(255,255,255,.8);
+}
+.logo { font-size: 3rem; margin-bottom:.2rem; }
+h1 { color:#8a0f3c; font-family: Georgia, serif; font-size:1.8rem; margin-bottom:.3rem; }
+.subtitle { color:#a55; margin-bottom:1.5rem; font-style:italic; }
+.input-group { text-align:left; margin-bottom:1rem; }
+.input-group label { font-size:.85rem; color:#8a0f3c; font-weight:600; }
+.input-group input {
+  width:100%; padding:.8rem 1rem; margin-top:.3rem;
+  border:2px solid #fecfef; border-radius:12px; outline:none;
+  font-size:1rem; transition:.2s; background:#fff8fa;
+}
+.input-group input:focus { border-color:#fc6076; background:#fff; box-shadow:0 0 0 4px rgba(252,96,118,.15); }
+.input-group input::placeholder { color:#c9a; }
+.pass-wrap { position:relative; }
+.pass-wrap input { padding-right:3rem !important; }
+.toggle-pass {
+  position:absolute; right:.6rem; top:50%; transform:translateY(-32%);
+  border:none; background:none; cursor:pointer; font-size:1.1rem; padding:.3rem;
+  opacity:.7;
+}
+.toggle-pass:hover { opacity:1; }
+.btn { width:100%; padding:.9rem; margin-top:.8rem;
+  border:none; border-radius:12px; cursor:pointer;
+  background: linear-gradient(90deg, #fc6076, #8a0f3c);
+  color:white; font-size:1.05rem; font-weight:700;
+  transition:.2s;
+}
+.btn:hover { transform: translateY(-2px); box-shadow:0 10px 20px rgba(252,96,118,.4); }
+.btn:active { transform: translateY(0); }
+.btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+.switch { margin-top:1.2rem; font-size:.9rem; color:#666; }
+.switch a { color:#c01a4d; font-weight:700; text-decoration:none; }
+.switch a:hover { text-decoration:underline; }
+.error { background:#ffe0e6; color:#8a0f3c; padding:.6rem; border-radius:8px; font-size:.85rem; margin-bottom:1rem; display:none; }
+.success { background:#e0ffe8; color:#0a6b2d; padding:.6rem; border-radius:8px; font-size:.85rem; margin-bottom:1rem; display:none; }
+.divider { margin:1rem 0; color:#bbb; font-size:.8rem; }
+
+/* Polish: mobile + scroll */
+body { padding:1rem; overflow-y:auto; }
+.card { max-height:92vh; overflow-y:auto; }
+.input-group input { font-size:16px; } /* prevents iOS zoom */
+@media (max-width:480px) {
+  .card { width:100%; padding:1.8rem 1.2rem; border-radius:18px; }
+  h1 { font-size:1.5rem; }
+  .logo { font-size:2.4rem; }
+  .btn { font-size:1rem; }
+}

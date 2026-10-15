@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Play Book 💕</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .home-card { width: 520px; max-width:92vw; }
+  .love-note { background:#fff0f4; border-radius:12px; padding:1rem; margin:1rem 0; color:#8a0f3c; word-break:break-word; }
+  #linkOutput { word-break:break-all; }
+  @media (max-width:480px) { .home-card { padding:1.5rem 1rem; } }
+</style>
+</head>
+<body>
+<div class="hearts-bg" id="hearts"></div>
+<div class="card home-card">
+  <div class="logo">📖❤️</div>
+  <h1 id="welcome">Our Play Book</h1>
+  <p class="subtitle">chapter 1: you just logged in</p>
+  <div class="love-note" id="userinfo">
+    ✨ This is your romantic home base. Next we can build:<br/>
+    love notes wall, date ideas spinner, memories timeline, countdowns...
+  </div>
+  <div class="love-note" style="background:#eafff0;">
+    <div style="font-weight:700;margin-bottom:.4rem;">💚 Where should Yes replies go?</div>
+    <div style="font-size:.85rem;margin-bottom:.5rem;">Owner WhatsApp (you receive all Yes clicks here): <b id="ownerDisplay"></b></div>
+    <div style="display:flex;gap:.4rem;">
+      <input id="ownerInput" type="tel" placeholder="+233..." style="flex:1;padding:.6rem;border:2px solid #b6e7c5;border-radius:10px;" />
+      <button onclick="saveOwner()" style="padding:.6rem 1rem;border:none;border-radius:10px;background:#25D366;color:#fff;font-weight:700;cursor:pointer;">Save</button>
+    </div>
+    <div class="error" id="error"></div>
+    <div class="success" id="success"></div>
+  </div>
+  <div class="love-note" style="background:#fff7e6;border:2px dashed #fcb69f;">
+    <div style="font-weight:700;margin-bottom:.4rem;">💌 Create link for your crush</div>
+    <div style="font-size:.85rem;margin-bottom:.5rem;">Type crush name → generate link → send it to them</div>
+    <input id="linkCrushName" type="text" placeholder="Crush name... e.g. Ama" style="width:100%;padding:.6rem;margin-bottom:.4rem;border:2px solid #fcb69f;border-radius:10px;" />
+    <input id="linkFromName" type="text" placeholder="Your name... e.g. David" style="width:100%;padding:.6rem;margin-bottom:.4rem;border:2px solid #fcb69f;border-radius:10px;" />
+    <button onclick="generateLink()" style="width:100%;padding:.7rem;border:none;border-radius:10px;background:linear-gradient(90deg,#fc6076,#8a0f3c);color:#fff;font-weight:700;cursor:pointer;">Generate Link ✨</button>
+    <div id="linkResult" style="display:none;margin-top:.6rem;">
+      <input id="linkOutput" readonly style="width:100%;padding:.6rem;border:1px solid #ddd;border-radius:8px;font-size:.75rem;background:#fff;" />
+      <div style="display:flex;gap:.4rem;margin-top:.4rem;">
+        <button onclick="copyLink()" style="flex:1;padding:.6rem;border:none;border-radius:8px;background:#333;color:#fff;font-weight:700;cursor:pointer;">Copy 📋</button>
+        <button onclick="previewLink()" style="flex:1;padding:.6rem;border:none;border-radius:8px;background:#ff4f9a;color:#fff;font-weight:700;cursor:pointer;">Preview 👀</button>
+      </div>
+      <div style="margin-top:.6rem;background:#eafff0;padding:.6rem;border-radius:10px;">
+        <div style="font-size:.8rem;font-weight:700;margin-bottom:.3rem;">📲 Send directly to crush via WhatsApp</div>
+        <div style="display:flex;gap:.4rem;">
+          <input id="crushWaInput" type="tel" placeholder="Crush WhatsApp e.g. +233..." style="flex:1;padding:.6rem;border:2px solid #b6e7c5;border-radius:8px;" />
+          <button onclick="sendViaWhatsapp()" style="padding:.6rem 1rem;border:none;border-radius:8px;background:#25D366;color:#fff;font-weight:700;cursor:pointer;">Send 💬</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="crush.html" class="btn" style="display:block;text-decoration:none;margin-bottom:.6rem;">Try the Crush Ask 💗</a>
+  <div class="love-note" style="background:#fff0f6;">
+    <div style="font-weight:700;">💖 Love Notes Wall</div>
+    <div style="font-size:.8rem;margin-bottom:.4rem;">Leave sweet notes for your crush</div>
+    <div style="display:flex;gap:.4rem;">
+      <input id="noteInput" type="text" placeholder="Write something sweet..." style="flex:1;padding:.6rem;border:2px solid #fecfef;border-radius:8px;" />
+      <button onclick="addNote()" style="padding:.6rem 1rem;border:none;border-radius:8px;background:#ff4f9a;color:#fff;font-weight:700;cursor:pointer;">Add</button>
+    </div>
+    <div id="notesList" style="margin-top:.5rem;text-align:left;"></div>
+  </div>
+  <div class="love-note" style="background:#f0f4ff;">
+    <div style="font-weight:700;">⏳ Countdown to Hangout</div>
+    <div style="font-size:.8rem;margin-bottom:.4rem;">Pick your big day</div>
+    <input id="countDate" type="datetime-local" style="width:100%;padding:.6rem;border:2px solid #b6c7ff;border-radius:8px;" onchange="saveCountdown()" />
+    <div id="countDisplay" style="font-size:1.1rem;font-weight:800;margin-top:.5rem;">No date set yet</div>
+  </div>
+  <div class="love-note" style="background:#fffbe6;">
+    <div style="font-weight:700;">🎡 Date Ideas Spinner</div>
+    <div style="font-size:.8rem;margin-bottom:.4rem;">Can't decide? Let fate pick</div>
+    <div id="dateIdea" style="font-size:1rem;font-weight:700;min-height:2.2rem;margin:.4rem 0;">Press spin! 💫</div>
+    <button onclick="spinDate()" style="width:100%;padding:.7rem;border:none;border-radius:10px;background:#ff9a3c;color:#fff;font-weight:700;cursor:pointer;">Spin 🎲</button>
+  </div>
+  <button class="btn" onclick="logout()">Logout</button>
+</div>
+<script src="app.js"></script>
+<script>
+  createHearts();
+  const user = currentUser();
+  function ownerLabel() {
+    const o = getOwnerWhatsapp();
+    return o ? '+' + o : 'not set yet';
+  }
+  if (!user) window.location.href = 'login.html';
+  else {
+    document.getElementById('welcome').textContent = 'Hi ' + user.name + ' 💕';
+    if (user.whatsapp) {
+      document.getElementById('userinfo').innerHTML = '💖 Nickname: <b>' + user.name + '</b><br/>📱 Your WhatsApp: <b>' + user.whatsapp + '</b><br/>📩 Yes replies go to owner: <b>' + ownerLabel() + '</b>';
+    }
+    // prefill sender name
+    document.getElementById('linkFromName').value = user.name || '';
+  }
+  document.getElementById('ownerDisplay').textContent = ownerLabel();
+  const curOwner = getOwnerWhatsapp();
+  if (curOwner) document.getElementById('ownerInput').value = '+' + curOwner;
+  function saveOwner() {
+    const v = document.getElementById('ownerInput').value;
+    if (setOwnerWhatsapp(v)) {
+      document.getElementById('ownerDisplay').textContent = ownerLabel();
+      document.getElementById('userinfo').innerHTML = '💖 Nickname: <b>' + user.name + '</b><br/>📱 Your WhatsApp: <b>' + user.whatsapp + '</b><br/>📩 Yes replies go to owner: <b>' + ownerLabel() + '</b>';
+    }
+  }
+  function generateLink() {
+    const crush = document.getElementById('linkCrushName').value.trim() || 'Crush';
+    const from = document.getElementById('linkFromName').value.trim() || (user ? user.name : '');
+    const wa = getOwnerWhatsapp();
+    if (!wa) { showMsg('error', 'Set owner WhatsApp first 💚'); return; }
+    const base = window.location.href.replace('home.html', 'crush.html').split('?')[0].split('#')[0];
+    const link = base + '?to=' + encodeURIComponent(crush) + '&from=' + encodeURIComponent(from) + '&wa=' + encodeURIComponent(wa);
+    document.getElementById('linkOutput').value = link;
+    document.getElementById('linkResult').style.display = 'block';
+    showMsg('success', 'Link ready for ' + crush + '! Copy & send 💌');
+  }
+  function copyLink() {
+    const out = document.getElementById('linkOutput');
+    out.select(); out.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(out.value).then(() => showMsg('success', 'Copied! Send it to your crush 💕'));
+  }
+  function previewLink() {
+    const link = document.getElementById('linkOutput').value;
+    if (link) window.open(link, '_blank');
+  }
+  function sendViaWhatsapp() {
+    const link = document.getElementById('linkOutput').value;
+    const crushWaRaw = document.getElementById('crushWaInput').value.trim();
+    const crushWa = (crushWaRaw || '').replace(/[^0-9]/g, '');
+    if (!link) { showMsg('error', 'Generate link first ✨'); return; }
+    if (crushWa.length < 7) { showMsg('error', 'Enter crush WhatsApp number 📱'); return; }
+    const crush = document.getElementById('linkCrushName').value.trim() || 'Crush';
+    const text = `Hey ${crush} 💗 Someone made something special for you! Open this: ${link}`;
+    window.open('https://wa.me/' + crushWa + '?text=' + encodeURIComponent(text), '_blank');
+    showMsg('success', 'Opening WhatsApp to ' + crush + '... 💬');
+  }
+  // --- Love notes ---
+  function notesKey() { return 'playbook_notes_' + (user ? user.email : 'guest'); }
+  function getNotes() { return JSON.parse(localStorage.getItem(notesKey()) || '[]'); }
+  function renderNotes() {
+    const list = document.getElementById('notesList');
+    const notes = getNotes();
+    if (!notes.length) { list.innerHTML = '<div style="font-size:.8rem;color:#999;">No notes yet. Be the first romantic 😘</div>'; return; }
+    list.innerHTML = notes.map((n,i) => `<div style="background:#fff;padding:.5rem .7rem;border-radius:8px;margin-bottom:.3rem;display:flex;justify-content:space-between;gap:.5rem;font-size:.9rem;">💕 ${n.replace(/</g,'&lt;')} <button onclick="delNote(${i})" style="border:none;background:none;cursor:pointer;">❌</button></div>`).join('');
+  }
+  function addNote() {
+    const inp = document.getElementById('noteInput');
+    const v = inp.value.trim();
+    if (!v) return;
+    const notes = getNotes(); notes.unshift(v.slice(0,200));
+    localStorage.setItem(notesKey(), JSON.stringify(notes));
+    inp.value = ''; renderNotes();
+  }
+  function delNote(i) {
+    const notes = getNotes(); notes.splice(i,1);
+    localStorage.setItem(notesKey(), JSON.stringify(notes)); renderNotes();
+  }
+  // --- Countdown ---
+  function countKey() { return 'playbook_count_' + (user ? user.email : 'guest'); }
+  function saveCountdown() {
+    const v = document.getElementById('countDate').value;
+    if (v) localStorage.setItem(countKey(), v);
+    tickCountdown();
+  }
+  function tickCountdown() {
+    const disp = document.getElementById('countDisplay');
+    const saved = localStorage.getItem(countKey());
+    if (!saved) { disp.textContent = 'No date set yet'; return; }
+    document.getElementById('countDate').value = saved;
+    const diff = new Date(saved) - new Date();
+    if (diff <= 0) { disp.textContent = "It's time!! 💗🎉"; return; }
+    const d = Math.floor(diff/86400000), h = Math.floor(diff%86400000/3600000), m = Math.floor(diff%3600000/60000), s = Math.floor(diff%60000/1000);
+    disp.textContent = `${d}d : ${h}h : ${m}m : ${s}s 💓`;
+  }
+  setInterval(tickCountdown, 1000); tickCountdown(); renderNotes();
+  // --- Date spinner ---
+  const dateIdeas = ["Picnic at sunset 🌅","Cook together 🍝","Stargazing ✨","Movie night 🎬","Beach walk 🏖️","Amusement park 🎢","Coffee + deep talks ☕","Dance in the rain 🌧️","Visit museum 🖼️","Road trip 🚗","Ice cream crawl 🍦","Karaoke night 🎤"];
+  function spinDate() {
+    const el = document.getElementById('dateIdea');
+    let i = 0;
+    const iv = setInterval(() => {
+      el.textContent = dateIdeas[Math.floor(Math.random()*dateIdeas.length)];
+      if (++i > 12) { clearInterval(iv); el.textContent = '👉 ' + el.textContent + ' 👈'; }
+    }, 100);
+  }
+</script>
+</body>
+</html>

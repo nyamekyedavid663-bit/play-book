@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Play Book 💕</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="hearts-bg" id="hearts"></div>
+<div class="card">
+  <div class="logo">📖❤️</div>
+  <h1>Play Book</h1>
+  <p class="subtitle">your romantic playbook</p>
+  <p style="color:#666;font-size:.95rem;margin-bottom:1rem;">Login to create crush links, love notes & countdowns 💌</p>
+  <a href="login.html" class="btn" style="display:block;text-decoration:none;">Login ❤️</a>
+  <a href="signup.html" class="btn" style="display:block;text-decoration:none;background:linear-gradient(90deg,#ff9a9e,#fc6076);">Create Account 💍</a>
+  <a href="crush.html" style="display:block;margin-top:1rem;color:#c01a4d;font-size:.9rem;">Try demo crush page 💗</a>
+</div>
+<script src="app.js"></script>
+<script>
+  createHearts();
+  // auto-skip if already logged in
+  try {
+    if (typeof currentUser === 'function' && currentUser()) {
+      window.location.href = 'home.html';
+    }
+  } catch(e) {}
+</script>
+</body>
+</html>
